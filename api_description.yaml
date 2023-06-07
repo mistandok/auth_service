@@ -1,0 +1,773 @@
+openapi: 3.0.3
+info:
+  title: Auth_sprint
+  description: |-
+    Сервис по авторизации
+  version: 1.0.11
+
+tags:
+  - name: auth
+    description: Авторизация, аутентификация пользователя
+  - name: oauth
+    description: Аутентификация на сторонних ресурсах
+  - name: roles
+    description: Управление ролями
+  - name: user roles
+    description: Управление ролями пользователя
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+
+paths:
+  /auth/api/v1/account/signup:
+    post:
+      tags:
+        - auth
+      summary: Регистрация
+      description: Регистрация нового пользователя
+      requestBody:
+        description: Создание пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegisterForm'
+        required: true
+      responses:
+        '200':
+          description: Пользователь был зарегестрирован!
+        '409':
+          description: Уже существуют пользователи с таким login или email
+
+  /auth/api/v1/account/login:
+    post:
+      tags:
+        - auth
+      summary: Вход в аккаунт
+      parameters:
+        - in: header
+          name: User-Agent
+          description: Данные об устройстве, с которого осуществляется вход в аккаунт.
+          schema:
+            type: string
+            format: string
+      description: Вход в аккаунт с использованием логина и пароля.
+      requestBody:
+        description: Данные аккаунты для входа
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+        required: true
+      responses:
+        '200':
+          description: Успешное завершение операции.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Tokens'
+        '404':
+          description: Пользователя login не существует, зарегистрируйтесь!
+        '401':
+          description: Введен некорректный пароль!
+
+  /auth/api/v1/account/logout:
+    delete:
+      tags:
+        - auth
+      summary: Выход из аккаунта
+      description: Предоставляет клиенту возможность осуществить выход из аккаунта.
+      responses:
+        '200':
+          description: Access-token и Refresh-token теперь в блоклисте и более недоступны.
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/account/update-auth-data:
+    patch:
+      tags:
+        - auth
+      summary: Смена пароля
+      description: Замена старого на новый пароль
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAuthDataForm'
+      responses:
+        '200':
+          description: Аутентификационные данные успешно обновлены!
+        '400':
+          description: Не переданы данные для обновления
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '409':
+          description: Пользователь с таким логином уже существует.
+      security:
+        - bearerAuth: []
+
+
+  /auth/api/v1/account/refresh:
+    get:
+      tags:
+        - auth
+      summary: Обновление access-токена
+      description: Обновление access-токена
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/account/history-auth/:
+    get:
+      tags:
+        - auth
+      summary: Предоставляет историю входов пользователя в аккаунт, начиная с последнего входа
+      description: Информация об истории входов в аккаунт
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserAuthHistory'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/account/logout-from-devices/:
+    post:
+      tags:
+        - auth
+      summary: Позволяет авторизованному пользователю осуществлять logout либо со всех устройств, либо с указанных устройств
+      description: Logout с выбранных устройств
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAgentsForLogout'
+      responses:
+        '200':
+            description: Выбранные сессии были завершены
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/oauth/login/{provider_name}:
+    get:
+      tags:
+        - oauth
+      summary: Авторизоваться через соц. сеть
+      description: Метод авторизовывает пользователя после аутентификации стороннего ресурса
+      parameters:
+        - name: provider_name
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '302':
+          description: redirect_url
+          links:
+            Access_token_url:
+             operationId: Redirect
+             parameters:
+                client_id: 'id приложения'
+                redirect_url: 'ссылка при успешной аутентификации'
+                secret_key: 'ключ приложения'
+                response_type: 'code'
+
+  /auth/api/v1/role/create:
+    post:
+      tags:
+        - roles
+      summary: Создание роли. Доступно только администратору
+      description: API позволяет создать роль с заданным именем и описанием.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleForm'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '400':
+          description: Ошибки, связанный с некорректынми значениями полей для создания.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/role/{role_id}:
+    get:
+      tags:
+        - roles
+      summary: Получение информации о роли. Доступно только администратору
+      description: Получение информации о конкретной роли
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '404':
+          description: Такой роли с role_id не существует!
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/role/{role_id}/delete:
+    delete:
+      tags:
+        - roles
+      summary: Удалене роли. Доступно только администратору
+      description: Удалене роли
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '200':
+          description: Роль с role_id удалена!
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '404':
+          description: Такой роли с role_id не существует!
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/role/{role_id}/update:
+    patch:
+      tags:
+        - roles
+      summary: Изменение роли. Доступно только администратору
+      description: Изменение роли
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      responses:
+        '200':
+          description: Роль с role_id обновлена!
+        '400':
+          description: Ошибки, связанный с некорректными данными для обновления
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '404':
+          description: Ошибки, связанные с отсутствием роли для обновления.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/roles/:
+    get:
+      tags:
+        - roles
+      summary: Просмотр всех ролей. Доступно только администратору
+      description: Получить список всех ролей
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RolesList'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/users/{user_id}/roles/create:
+    post:
+      tags:
+        - user roles
+      summary: Добавление ролей пользователю. Доступно только админимтратору.
+      description: Добавление ролей пользователю
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RolesUUID'
+      responses:
+        '200':
+          description: Добавлены роли
+        '400':
+          description: Ошибки, связанный с некорректными запросами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+        '404':
+          description: Ошибки, связанный отсутствующим пользователем или ролями.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/users/user-infos:
+    get:
+      tags:
+        - user roles
+      summary: Доступ к персональной информации пользователей доступно только админу
+      description: Получение всю информацию о пользователях
+      parameters:
+        - name: user_ids
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: user_groups
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: page_number
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfoList'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/users/{user_id}/roles/delete/:
+    delete:
+      tags:
+        - user roles
+      summary: Удаление ролей у пользователя. Доступно только администратору.
+      description: Удаление ролей у пользователя
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: string
+        - name: roles_id
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Done
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/users/{user_id}/roles/:
+    get:
+      tags:
+        - user roles
+      summary: Просмотр всех ролей пользователя
+      description: Просмотр всех ролей пользователя
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RolesList'
+        '401':
+          description: Ошибки, связанные с некорректным токеном.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/TokenUnauthorizedError'
+        '404':
+          description: Ошибки, связанный с отсутствующими ролями
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+      security:
+        - bearerAuth: []
+
+  /auth/api/v1/user-permissions:
+    get:
+      tags:
+        - permissions
+      summary: Получение информации о разрешениях пользователя.
+      description: Получение информации о разрешениях пользователя на конкретную область сервиса.
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: scope
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsResponse'
+        '403':
+          description: Ошибки, связанный с недостаточными правами.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorTemplate'
+
+
+components:
+  schemas:
+
+    LoginForm:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+
+    UpdateAuthDataForm:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+
+    UserRegisterForm:
+      type: object
+      properties:
+        login:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    UserAuthHistory:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          format: int64
+        user_agent:
+          type: string
+        created_at:
+          type: string
+
+    UserAgentsForLogout:
+      type: object
+      properties:
+        user_agents_for_logout:
+          type: array
+          items:
+            type: string
+
+    RolesUUID:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+
+    Tokens:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+    RefreshToken:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+
+    RoleForm:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    UserInfoList:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            type: object
+        outcome:
+          type: array
+          items:
+            type: object
+            properties:
+              next_page:
+                type: integer
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+
+    RolesList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Role'
+
+    TokenUnauthorizedError:
+      type: object
+      properties:
+        msg:
+          type: string
+
+    ErrorTemplate:
+      type: object
+      properties:
+        error:
+          type: string
+        detail:
+          type: string
+
+    PermissionsResponse:
+      type: object
+      properties:
+        admin:
+          type: boolean
+        write:
+          type: boolean
+        read:
+          type: boolean
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: JWT-token необходим для того, чтобы иметь доступ к этому API.
+      scheme: bearer
+      bearerFormat: JWT

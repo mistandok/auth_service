@@ -1,0 +1,29 @@
+# MacOS
+.DS_Store
+
+# /python/
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.idea
+.env
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+*.md
+!README.md

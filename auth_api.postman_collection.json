@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "89c045d8-6975-446e-8742-c88f55684f63",
+		"name": "auth_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19310870"
+	},
+	"item": [
+		{
+			"name": "127.0.0.1/auth/api/v1/account/signup",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"logout-user\",\n    \"password\": \"password\",\n    \"email\": \"superuser@yandex.ru\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/signup",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/account/login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "guest_pc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"logout-user\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/login",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/account/refresh",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3NjgyMjA4MCwianRpIjoiNjU3MTE3NzktMmJiOS00ODg1LWEzYzAtODAwZGI0NmQzZTk0IiwidHlwZSI6InJlZnJlc2giLCJzdWIiOnsidXNlcl9pZCI6ImFkMzljZDY4LTMxMzEtNDg0My1iYTQyLWYyNTBlZGViNGNhYiIsInVzZXJfYWdlbnQiOiJndWVzdF9wYyJ9LCJuYmYiOjE2NzY4MjIwODAsImV4cCI6MTY3NzQyNjg4MH0.I5H5FV5wj_1_RAvgHCXuKSLK6REzOWMX_KCwAIgdFDA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/refresh",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/account/logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODExMTMxLCJqdGkiOiIxZGFhNGE2Yi01OGQ0LTQxMTAtYTYwMS0yMzQ3MjllN2NmMWIiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJmZDJlY2I1Ny00ZjA2LTQ5ZGMtOWQ2Ny05NmViZDJmNzRhZWEiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6IjgxZDcxYjc3LWZlNGEtNDUxNS1iMWJkLWYzY2NiYTFmMzYzMCJ9LCJuYmYiOjE2NzY4MTExMzEsImV4cCI6MTY3NjgxMTE5MX0.DgreRFl3VxsH67lakoLnkOi4bL5H4KA1zA4TSAsXrkU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/logout",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/account/update-auth-data/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODIyMDkzLCJqdGkiOiJkM2IxZTAwZi1jMTRjLTRhZTgtODJlNC1hNDc4Y2EyOTNkMzEiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJhZDM5Y2Q2OC0zMTMxLTQ4NDMtYmE0Mi1mMjUwZWRlYjRjYWIiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6IjY1NzExNzc5LTJiYjktNDg4NS1hM2MwLTgwMGRiNDZkM2U5NCJ9LCJuYmYiOjE2NzY4MjIwOTMsImV4cCI6MTY3NjgyOTI5M30.SZI8UBMiNz3e_7TqUBwsXHFiHgJEgGsJTuKHJv6JNN8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"_mistandok_\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/update-auth-data/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"update-auth-data",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/account/ogout-from-devices",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODIyMDkzLCJqdGkiOiJkM2IxZTAwZi1jMTRjLTRhZTgtODJlNC1hNDc4Y2EyOTNkMzEiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJhZDM5Y2Q2OC0zMTMxLTQ4NDMtYmE0Mi1mMjUwZWRlYjRjYWIiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6IjY1NzExNzc5LTJiYjktNDg4NS1hM2MwLTgwMGRiNDZkM2U5NCJ9LCJuYmYiOjE2NzY4MjIwOTMsImV4cCI6MTY3NjgyOTI5M30.SZI8UBMiNz3e_7TqUBwsXHFiHgJEgGsJTuKHJv6JNN8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_agents_for_logout\": [\"all\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/logout-from-devices/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"logout-from-devices",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/account/history-auth?limit=4",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODIyMzE2LCJqdGkiOiIwNmE2MDFjMS01NmU5LTRjYjgtOWRiNy05ZmNmN2M2MzNmZWQiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJhZDM5Y2Q2OC0zMTMxLTQ4NDMtYmE0Mi1mMjUwZWRlYjRjYWIiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6IjQyNmRkZjhkLThlNTQtNGI0NC05NjMwLTg0MTllOWZkYTU0YSJ9LCJuYmYiOjE2NzY4MjIzMTYsImV4cCI6MTY3NjgyOTUxNn0.AryT8nuoco1gF1azzVUfLNjSQlNLve_SX5KYHQ-Q2ko",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/history-auth?limit=4",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"history-auth"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/role/edfb5226-55d3-472f-8fa1-eac7bbe1da65/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODE1ODI4LCJqdGkiOiIxM2FkMmY1NC1jMTkzLTQ0ZWMtOWYzNC1iYWM5ZDkyMDZhMzkiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6ImViMTU3OWM3LWVkYjItNDc1MS1hMzIwLTgyNGIxYjRkYTU5YSJ9LCJuYmYiOjE2NzY4MTU4MjgsImV4cCI6MTY3NjgyMzAyOH0.c26tF0FhfwA0aEbsKe0OlzlL6FkffwB13OOfOtzdQxg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/role/ecba6656-0202-45ba-9bdf-65fc399e9205",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"role",
+						"ecba6656-0202-45ba-9bdf-65fc399e9205"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/role/edfb5226-55d3-472f-8fa1-eac7bbe1da65/update",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODE1ODI4LCJqdGkiOiIxM2FkMmY1NC1jMTkzLTQ0ZWMtOWYzNC1iYWM5ZDkyMDZhMzkiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6ImViMTU3OWM3LWVkYjItNDc1MS1hMzIwLTgyNGIxYjRkYTU5YSJ9LCJuYmYiOjE2NzY4MTU4MjgsImV4cCI6MTY3NjgyMzAyOH0.c26tF0FhfwA0aEbsKe0OlzlL6FkffwB13OOfOtzdQxg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"test_role\",\n    \"name\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/role/ecba6656-0202-45ba-9bdf-65fc399e9205/update",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"role",
+						"ecba6656-0202-45ba-9bdf-65fc399e9205",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/role/edfb5226-55d3-472f-8fa1-eac7bbe1da65",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODE1ODI4LCJqdGkiOiIxM2FkMmY1NC1jMTkzLTQ0ZWMtOWYzNC1iYWM5ZDkyMDZhMzkiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6ImViMTU3OWM3LWVkYjItNDc1MS1hMzIwLTgyNGIxYjRkYTU5YSJ9LCJuYmYiOjE2NzY4MTU4MjgsImV4cCI6MTY3NjgyMzAyOH0.c26tF0FhfwA0aEbsKe0OlzlL6FkffwB13OOfOtzdQxg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auths/api/v1/role/ecba6656-0202-45ba-9bdf-65fc399e9205",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auths",
+						"api",
+						"v1",
+						"role",
+						"ecba6656-0202-45ba-9bdf-65fc399e9205"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/role/create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODE1ODI4LCJqdGkiOiIxM2FkMmY1NC1jMTkzLTQ0ZWMtOWYzNC1iYWM5ZDkyMDZhMzkiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6ImViMTU3OWM3LWVkYjItNDc1MS1hMzIwLTgyNGIxYjRkYTU5YSJ9LCJuYmYiOjE2NzY4MTU4MjgsImV4cCI6MTY3NjgyMzAyOH0.c26tF0FhfwA0aEbsKe0OlzlL6FkffwB13OOfOtzdQxg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"subscriber\",\n    \"description\": \"have access to best films\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/role/create",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"role",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/roles/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODIyNzc3LCJqdGkiOiI0NWM2NWZkOC1mMTRmLTQ5M2MtYWU5Yi0wNWZmOTZlNjE0YmQiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6Ijk4NTdkM2NkLTJkNmEtNGMyYi1hYjhjLTg2MmYyOTRkN2QyNCJ9LCJuYmYiOjE2NzY4MjI3NzcsImV4cCI6MTY3NjgyOTk3N30.JU91E7J6OmDxctH1UhnNsuDmIkd5QvBnvAIbUOHbuBU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/roles/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"roles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/users/ad39cd68-3131-4843-ba42-f250edeb4cab/roles/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODIyNzc3LCJqdGkiOiI0NWM2NWZkOC1mMTRmLTQ5M2MtYWU5Yi0wNWZmOTZlNjE0YmQiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6Ijk4NTdkM2NkLTJkNmEtNGMyYi1hYjhjLTg2MmYyOTRkN2QyNCJ9LCJuYmYiOjE2NzY4MjI3NzcsImV4cCI6MTY3NjgyOTk3N30.JU91E7J6OmDxctH1UhnNsuDmIkd5QvBnvAIbUOHbuBU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/users/ad39cd68-3131-4843-ba42-f250edeb4cab/roles/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"users",
+						"ad39cd68-3131-4843-ba42-f250edeb4cab",
+						"roles",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/users/ad39cd68-3131-4843-ba42-f250edeb4cab/roles/delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc3MjQyMzkyLCJqdGkiOiJlNDFhM2ZkMS00NjJiLTQ5NmYtOWU5Yi01ZDY1NDAxMjkyYzEiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiI4Yzg4OWZlNS1lYzAwLTRiMTItOTI5ZC01NDc5ZjM4NTg1ZWUiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6IjFmMjY4Zjg1LTM0Y2ItNDc5Yy05NDBlLTM1MGU2MTNjMDFjNCJ9LCJuYmYiOjE2NzcyNDIzOTIsImV4cCI6MTY3NzI0OTU5Mn0.0DwUk1yhZeox9FnY8wo8vul2_E81_pTNPtjUOGuiw5o",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"roles\": [\"7d4f75d4-f94b-4714-ad51-40da3670d153\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/users/ad39cd68-3131-4843-ba42-f250edeb4cab/roles/delete/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"users",
+						"ad39cd68-3131-4843-ba42-f250edeb4cab",
+						"roles",
+						"delete",
+						""
+					],
+					"query": [
+						{
+							"key": "roles_id",
+							"value": "ff7a245d-b3ca-43c7-84e0-f6a6dcf0df65, d06bcda9-067f-4705-ac93-414c7e3a5a75",
+							"disabled": true
+						},
+						{
+							"key": "2",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1/auth/api/v1/users/ad39cd68-3131-4843-ba42-f250edeb4cab/roles/create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjc2ODIyNzc3LCJqdGkiOiI0NWM2NWZkOC1mMTRmLTQ5M2MtYWU5Yi0wNWZmOTZlNjE0YmQiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiJlYTgyM2I5MC00M2E5LTQ4ZDgtYmViOS1iMWFiMDA0ZDljNjAiLCJ1c2VyX2FnZW50IjoiZ3Vlc3RfcGMiLCJyZWZyZXNoX2p0aSI6Ijk4NTdkM2NkLTJkNmEtNGMyYi1hYjhjLTg2MmYyOTRkN2QyNCJ9LCJuYmYiOjE2NzY4MjI3NzcsImV4cCI6MTY3NjgyOTk3N30.JU91E7J6OmDxctH1UhnNsuDmIkd5QvBnvAIbUOHbuBU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"roles\": [\"7d4f75d4-f94b-4714-ad51-40da3670d153\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/v1/users/ad39cd68-3131-4843-ba42-f250edeb4cab/roles/create",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"ad39cd68-3131-4843-ba42-f250edeb4cab",
+						"roles",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

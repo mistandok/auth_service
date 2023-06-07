@@ -1,0 +1,115 @@
+version: '3'
+
+services:
+  service:
+    image: mistandok/online-cinema-admin-panel:v1
+    volumes:
+      - static_volume:/opt/app/staticfiles
+      - media_volume:/opt/app/mediafiles
+    expose:
+      - 8000
+    env_file:
+      - ../../docker_app/config/admin_panel/.env.prod
+    depends_on:
+      - database
+
+  database:
+    image: postgres:13.0
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ../../docker_app/config/admin_panel/.env.prod.db
+
+  etl:
+    image: mistandok/online-cinema-etl-process:v2
+    env_file:
+      - ../../docker_app/config/etl_process/.env.prod
+    depends_on:
+      - database
+      - elasticsearch
+      - redis
+    restart: always
+
+  elasticsearch:
+    image: elasticsearch:8.5.3
+    expose:
+      - 9200
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+      USE_SSL: false
+      xpack.security.enabled: false
+
+  redis:
+    image: redis:latest
+    expose:
+      - 6379
+
+  fastapi:
+    image: mistandok/fastapi:v1.0.0
+    restart: always
+    env_file:
+      - ../../docker_app/config/fastapi_project/.env.prod
+    depends_on:
+      - redis
+      - elasticsearch
+
+  auth_database:
+    image: postgres:13.0
+    restart: always
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ../../docker_app/config/auth/.env.prod.db
+    command: -p 6432
+    ports:
+      - 6432:6432
+
+  auth_service:
+    image: mikhailkushnerev/auth-service:v1.0.1
+    depends_on:
+      - auth_database
+      - auth_redis
+      - refresh_auth_redis
+    env_file:
+      - ../../docker_app/config/auth/.env.prod.dev
+
+  auth_redis:
+    image: redis:latest
+    restart: always
+    command: --port 6381
+    ports:
+      - 6381:6381
+    env_file:
+      - ../../docker_app/config/auth/.env.prod.dev
+
+  refresh_auth_redis:
+    image: redis:latest
+    restart: always
+    command: --port 6380
+    ports:
+      - 6380:6380
+    env_file:
+      - ../../docker_app/config/auth/.env.prod.dev
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ../../docker_app/etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../../docker_app/etc/nginx/configs:/etc/nginx/conf.d:ro
+      - static_volume:/opt/app/staticfiles
+      - media_volume:/opt/app/mediafiles
+    environment:
+      NGINX_SET_REAL_IPS_FROM: "[\"192.168.1.0/24\"]"
+    depends_on:
+      - fastapi
+      - service
+      - auth_service
+    ports:
+      - 80:80
+
+volumes:
+  auth_postgres_data:
+  postgres_data:
+  static_volume:
+  media_volume:
